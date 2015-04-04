@@ -2,8 +2,32 @@
 class MoviesController < ApplicationController
 
 	def index
+		@all_ratings = Movie.all_ratings
 		sort_ = params[:sort_by]
-		@movies = Movie.all
+		# ratings_ = params[:ratings]
+		if params.has_key?(:ratings)
+			ratings_ = params[:ratings]
+			@all_rating = []
+			if ratings_["G"] == "1"
+				@all_rating.append("G")
+			end
+			if ratings_["PG"] == "1"
+				@all_rating.append("PG")
+			end
+			if ratings_["PG-13"] == "1"
+				@all_rating.append("PG-13")
+			end
+			if ratings_["R"] == "1"
+				@all_rating.append("R")
+			end
+			# putsdsad
+			@movies = Movie.find_all_by_rating(@all_rating)
+		else
+			@all_rating = ["PG", "G", "R", "PG-13"]
+			@movies = Movie.all
+		end
+		
+		
 		if sort_ == 'title'
 		 	@movies =  Movie.find(:all, :order=>'title')
 		end
